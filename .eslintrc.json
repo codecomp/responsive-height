@@ -1,0 +1,75 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "mocha": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
+    },
+    "plugins": [
+        "mocha"
+    ],
+    "rules": {
+        "accessor-pairs": [
+            "error",
+            {
+                "getWithoutSet": true
+            }
+        ],
+        "curly": "warn",
+        "eqeqeq": "error",
+        "func-call-spacing": [
+            "error",
+            "never"
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "keyword-spacing": [
+            "warn",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "max-len": [
+            "warn", {
+                "code": 120,
+                "ignoreComments": true
+            }
+        ],
+        "no-console": "warn",
+        "no-eval": "error",
+        "no-loop-func": "error",
+        "no-trailing-spaces": "warn",
+        "no-underscore-dangle": "warn",
+        "no-unused-vars": "warn",
+        "no-use-before-define": "error",
+        "no-var": "error",
+        "prefer-const": "error",
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "mocha/no-exclusive-tests": "error"
+    }
+}
