@@ -1,10 +1,10 @@
 /**
- * Compile user and default arguments into single opbject
+ * Merge two objects ogether pulling defaults from one and overwtring from the other
  * @param  {object} obj           user supplied argument object
  * @param  {object} defaultObject defautl argument object
  * @return {object}               compiled argument object
  */
-export function defaults (obj, defaultObject) {
+export function mergeObjects (obj, defaultObject) {
     obj = {...obj};
     for (const k in defaultObject) {
         if (obj[k] === undefined) {

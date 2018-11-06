@@ -1,20 +1,20 @@
 import { assert } from 'chai';
 import { testConst, testFunction } from '../src';
-import { defaults, debounce } from '../src/utils';
+import { mergeObjects, debounce } from '../src/utils';
 
 describe('Utility functions', () => {
-    it('defaults should compile an object', () => {
-        assert.isObject(defaults({}, {}));
+    it('mergeObjects should compile an object', () => {
+        assert.isObject(mergeObjects({}, {}));
     });
-    it('defaults should overwrite default object attriburtes with new attriburtes', () => {
+    it('mergeObjects should overwrite default object attriburtes with new attriburtes', () => {
         const obj = { 'test': 'user' };
         const defaultObj = { 'test': 'default' };
-        assert.propertyVal(defaults(obj, defaultObj), 'test', 'user');
+        assert.propertyVal(mergeObjects(obj, defaultObj), 'test', 'user');
     });
-    it('defaults should add undefined user obejct items from defaults', () => {
+    it('mergeObjects should add undefined user obejct items from default', () => {
         const obj = {};
         const defaultObj = { 'test': 'default' };
-        assert.propertyVal(defaults(obj, defaultObj), 'test', 'default');
+        assert.propertyVal(mergeObjects(obj, defaultObj), 'test', 'default');
     });
     it('debounce should return a function', () => {
         const func = function(){};
