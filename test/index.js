@@ -1,6 +1,7 @@
+import sinon from 'sinon';
 import { assert } from 'chai';
 import { mergeObjects, debounce } from '../src/utils';
-import { checkWindowWidth, ResponsiveHeight } from '../src';
+import { checkWindowWidth, defaultOptions, validateOptions, ResponsiveHeight } from '../src';
 
 describe('Helpers', () => {
     it('documet and window should exist', () => {
@@ -111,34 +112,70 @@ describe('Callback functions', () => {
     });
 });
 
-describe('Argument validation', () => {
+describe('Option validation', () => {
     it('global should be a boolean', () => {
         function func(attr) {
-            new ResponsiveHeight(null, { global: attr });
+            return validateOptions(mergeObjects({ global: attr }, defaultOptions));
         }
-        assert.throws(() => func(1), 'Option global is not valid');
-        assert.throws(() => func(null), 'Option global is not valid');
-        assert.doesNotThrow(() => func(true), 'Option global is not valid');
+        assert.nestedProperty(func(1), 'global.type');
+        assert.nestedProperty(func(null), 'global.type');
+        assert.notNestedProperty(func(true), 'global.type');
     });
     it('delay should be an integer', () => {
         function func(attr) {
-            new ResponsiveHeight(null, { delay: attr });
+            return validateOptions(mergeObjects({ delay: attr }, defaultOptions));
         }
-        assert.throws(() => func(1.5), 'Option delay is not valid');
-        assert.throws(() => func(0.5), 'Option delay is not valid');
-        assert.throws(() => func(-1), 'Option delay is not valid');
-        assert.throws(() => func(true), 'Option delay is not valid');
-        assert.throws(() => func(null), 'Option delay is not valid');
-        assert.doesNotThrow(() => func(100), 'Option delay is not valid');
-        assert.doesNotThrow(() => func(0), 'Option delay is not valid');
+        assert.nestedProperty(func(1.5), 'delay.type');
+        assert.nestedProperty(func(0.5), 'delay.type');
+        assert.nestedProperty(func(-1), 'delay.type');
+        assert.nestedProperty(func(true), 'delay.type');
+        assert.nestedProperty(func(null), 'delay.type');
+        assert.notNestedProperty(func(100), 'delay.type');
+        assert.notNestedProperty(func(0), 'delay.type');
+    });
+    it('css selectors should be a string or null', () => {
+        function func(attr) {
+            return validateOptions(mergeObjects({ child: attr }, defaultOptions));
+        }
+        assert.nestedProperty(func(1), 'child.type');
+        assert.nestedProperty(func(true), 'child.type');
+        assert.notNestedProperty(func('.class'), 'child.type');
+        assert.notNestedProperty(func(null), 'child.type');
+    });
+    it('widths should be an array', () => {
+        function func(attr) {
+            return validateOptions(mergeObjects({ widths: attr }, defaultOptions));
+        }
+        assert.nestedProperty(func(1), 'widths.type');
+        assert.nestedProperty(func(null), 'widths.type');
+        assert.notNestedProperty(func([]), 'widths.type');
+        assert.notNestedProperty(func([[0, 1]]), 'widths.type');
+    });
+    it('widths should have correct formatting', () => {
+        function func(attr) {
+            return validateOptions(mergeObjects({ widths: attr }, defaultOptions));
+        }
+        assert.nestedProperty(func([[1]]), 'widths.format');
+        assert.nestedProperty(func([[0, 0, 0]]), 'widths.format');
+        assert.nestedProperty(func([[0, 0]]), 'widths.format');
+        assert.nestedProperty(func([[-1, -1]]), 'widths.format');
+        assert.nestedProperty(func([[1, -1]]), 'widths.format');
+        assert.nestedProperty(func([[true, false]]), 'widths.format');
+        assert.notNestedProperty(func([[0, 1]]), 'widths.format');
     });
     it('callbacks should be a function or null', () => {
         function func(attr) {
-            new ResponsiveHeight(null, { before_init: attr });
+            return validateOptions(mergeObjects({ before_init: attr }, defaultOptions));
         }
-        assert.throws(() => func(1), 'Option callback is not valid');
-        assert.throws(() => func(false), 'Option callback is not valid');
-        assert.doesNotThrow(() => func(() => {}), 'Option callback is not valid');
-        assert.doesNotThrow(() => func(null), 'Option callback is not valid');
+        assert.nestedProperty(func(1), 'before_init.type');
+        assert.nestedProperty(func(false), 'before_init.type');
+        assert.notNestedProperty(func(() => {}), 'before_init.type');
+        assert.notNestedProperty(func(null), 'before_init.type');
+    });
+    it('invalid options should throw error', () => {
+        const spy = sinon.stub(console, 'error');
+        new ResponsiveHeight(null, {delay: false});
+        assert(spy.calledWith('Errors found in options'));
+        spy.restore();
     });
 });

@@ -1,10 +1,11 @@
+import { set, isEmpty } from 'lodash';
 import { mergeObjects } from './utils';
 
-const defaults = {
+export const defaultOptions = {
     global:         false,
     delay:          200,
     widths:         [],
-    child:     		false,
+    child:     		null,
     exclude_get:    null,
     exclude_set:    null,
     before_init:    null,
@@ -33,12 +34,72 @@ export function checkWindowWidth(width) {
 }
 
 /**
+ * validate options passed by end user
+ * @param  {object} options
+ * @return {object}         found errors by paramater
+ */
+export function validateOptions(options) {
+    const errors = {};
+
+    // Global must be a boolean
+    if (typeof options.global !== 'boolean') {
+        set(errors, 'global.type', 'global option should be boolean');
+    }
+
+    // delay must be an int of 0 or more
+    if (typeof options.delay !== 'number' || options.delay < 0 || (options.delay !== 0 && (options.delay % 1) !== 0)) { // eslint-disable-line max-len
+        set(errors, 'delay.type', 'delay option should be an integer');
+    }
+
+    // Callabcks must be null or a function
+    for (const attribute of ['before_init', 'after_init', 'window_resize', 'before_resize', 'after_resize', 'after_destroy']) { // eslint-disable-line max-len
+        if (typeof options[attribute] !== 'function' && options[attribute] !== null){
+            set(errors, `${attribute}.type`, `${attribute} option is not a valid callback`);
+        }
+    }
+
+    // CSS selector paramaters bust be a string or null
+    for (const attribute of ['child', 'exclude_get', 'exclude_set']) {
+        if (typeof options[attribute] !== 'string' && options[attribute] !== null){
+            set(errors, `${attribute}.type`, `${attribute} option must be a string or null`);
+        }
+    }
+
+    // Widths must be a vlaid multi dimensional array
+    if (options.widths instanceof Array !== true) {
+        set(errors, 'widths.type', 'widths option should be an array');
+    } else {
+        for (const width of options.widths) {
+            // Individual widths must only have 2 paeramaters
+            if (width instanceof Array !== true || width.length !== 2) {
+                set(errors, 'widths.format', 'width options should be an array');
+                break;
+            }
+
+            // The size must be a int of 0 or more
+            if (typeof width[0] !== 'number' || width[0] < 0 || (width[0] !== 0 && (width[0] % 1) !== 0)) {
+                set(errors, 'widths.format', 'width sizes must be an integer of 0 or more');
+                break;
+            }
+
+            // The column count must be an int of 1 or more
+            if (typeof width[1] !== 'number' || width[1] < 1 || (width[1] % 1) !== 0) {
+                set(errors, 'widths.format', 'width colusoumns must be an integer of 1 or more');
+                break;
+            }
+        }
+    }
+
+    return errors;
+}
+
+/**
  * Module entrypoint
  * @type {class}
  */
 export class ResponsiveHeight {
-    constructor(el, args) {
-        this.options = mergeObjects(args, defaults);
+    constructor(el, opts) {
+        this.options = mergeObjects(opts, defaultOptions);
         this.init();
     }
 
@@ -47,27 +108,17 @@ export class ResponsiveHeight {
             this.options.before_init();
         }
 
-        this.validateArguments();
+        const validation = validateOptions(this.options);
+        if ( !isEmpty(validation) ) {
+            console.error('Errors found in options'); // eslint-disable-line no-console
+            // TODO display validaton errors to user in a clean way
+            console.error(validation); // eslint-disable-line no-console
+        } else {
 
-        //TODO start the process off
+            //TODO start the process off
 
-        if ( typeof this.options.after_init === 'function' ) {
-            this.options.after_init();
-        }
-    }
-
-    validateArguments() {
-        if (typeof this.options.global !== 'boolean') {
-            throw 'Option global is not valid';
-        }
-
-        if (typeof this.options.delay !== 'number' || this.options.delay < 0 || (this.options.delay !== 0 && (this.options.delay % 1) !== 0)) { // eslint-disable-line max-len
-            throw 'Option delay is not valid';
-        }
-
-        for (const attribute of ['before_init', 'after_init', 'window_resize', 'before_resize', 'after_resize', 'after_destroy']) { // eslint-disable-line max-len
-            if (typeof this.options[attribute] !== 'function' && this.options[attribute] !== null){
-                throw 'Option callback is not valid';
+            if ( typeof this.options.after_init === 'function' ) {
+                this.options.after_init();
             }
         }
     }
