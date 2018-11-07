@@ -110,3 +110,35 @@ describe('Callback functions', () => {
         }});
     });
 });
+
+describe('Argument validation', () => {
+    it('global should be a boolean', () => {
+        function func(attr) {
+            new ResponsiveHeight(null, { global: attr });
+        }
+        assert.throws(() => func(1), 'Option global is not valid');
+        assert.throws(() => func(null), 'Option global is not valid');
+        assert.doesNotThrow(() => func(true), 'Option global is not valid');
+    });
+    it('delay should be an integer', () => {
+        function func(attr) {
+            new ResponsiveHeight(null, { delay: attr });
+        }
+        assert.throws(() => func(1.5), 'Option delay is not valid');
+        assert.throws(() => func(0.5), 'Option delay is not valid');
+        assert.throws(() => func(-1), 'Option delay is not valid');
+        assert.throws(() => func(true), 'Option delay is not valid');
+        assert.throws(() => func(null), 'Option delay is not valid');
+        assert.doesNotThrow(() => func(100), 'Option delay is not valid');
+        assert.doesNotThrow(() => func(0), 'Option delay is not valid');
+    });
+    it('callbacks should be a function or null', () => {
+        function func(attr) {
+            new ResponsiveHeight(null, { before_init: attr });
+        }
+        assert.throws(() => func(1), 'Option callback is not valid');
+        assert.throws(() => func(false), 'Option callback is not valid');
+        assert.doesNotThrow(() => func(() => {}), 'Option callback is not valid');
+        assert.doesNotThrow(() => func(null), 'Option callback is not valid');
+    });
+});

@@ -5,9 +5,8 @@ const defaults = {
     delay:          200,
     widths:         [],
     child:     		false,
-    verbose:        false,
-    exclude_get:    false,
-    exclude_set:    false,
+    exclude_get:    null,
+    exclude_set:    null,
     before_init:    null,
     after_init:     null,
     window_resize:  null,
@@ -21,7 +20,7 @@ const defaults = {
  * @param  {int} width screen width to check
  * @return {bool}
  */
-export function checkWindowWidth(width){
+export function checkWindowWidth(width) {
     if ( window.matchMedia ) {
         return window.matchMedia(`screen and (min-width:${width}px)`).matches;
     }
@@ -40,7 +39,6 @@ export function checkWindowWidth(width){
 export class ResponsiveHeight {
     constructor(el, args) {
         this.options = mergeObjects(args, defaults);
-
         this.init();
     }
 
@@ -49,10 +47,28 @@ export class ResponsiveHeight {
             this.options.before_init();
         }
 
+        this.validateArguments();
+
         //TODO start the process off
 
         if ( typeof this.options.after_init === 'function' ) {
             this.options.after_init();
+        }
+    }
+
+    validateArguments() {
+        if (typeof this.options.global !== 'boolean') {
+            throw 'Option global is not valid';
+        }
+
+        if (typeof this.options.delay !== 'number' || this.options.delay < 0 || (this.options.delay !== 0 && (this.options.delay % 1) !== 0)) { // eslint-disable-line max-len
+            throw 'Option delay is not valid';
+        }
+
+        for (const attribute of ['before_init', 'after_init', 'window_resize', 'before_resize', 'after_resize', 'after_destroy']) { // eslint-disable-line max-len
+            if (typeof this.options[attribute] !== 'function' && this.options[attribute] !== null){
+                throw 'Option callback is not valid';
+            }
         }
     }
 }
