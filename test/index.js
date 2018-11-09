@@ -1,7 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { mergeObjects, debounce } from '../src/utils';
-import { checkWindowWidth, defaultOptions, validateOptions, ResponsiveHeight } from '../src';
+import { cloneDeep } from 'lodash';
+import { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, ResponsiveHeight } from '../src';
 
 describe('Helpers', () => {
     it('documet and window should exist', () => {
@@ -97,6 +98,98 @@ describe('Export functions', () => {
         window.resizeTo(500);
         assert.isFalse(checkWindowWidth(1000));
     });
+    it('collectElememnts should return an array of expected elements', () => {
+        const container = document.createElement('div');
+        const element = '<div><span class="child">Test</span></div>';
+        container.innerHTML = element.repeat(10);
+        document.body.appendChild(container);
+
+        assert.isArray(collectElememnts(null, false));
+        assert.isEmpty(collectElememnts(null, false));
+        assert.isArray(collectElememnts(container, false));
+        assert.isNotEmpty(collectElememnts(container, false));
+        assert.isArray(collectElememnts(container, '.child'));
+        assert.isNotEmpty(collectElememnts(container, '.child'));
+        assert.isEmpty(collectElememnts(container, '.empty'));
+        assert.equal(collectElememnts(container, '.child')[0].tagName.toLowerCase(), 'span');
+        assert.equal(collectElememnts(container, false)[0].tagName.toLowerCase(), 'div');
+        document.body.innerHTML = '';
+    });
+    it('getRequiredRowSize should return -1 on global', () => {
+        assert.equal(getRequiredRowSize(true, [[0, 1]]), -1);
+    });
+    it('getRequiredRowSize should correctly calculate the required column number', () => {
+        window.resizeTo(2000);
+
+        assert.equal(getRequiredRowSize(false, [[0, 1]]), 1);
+        assert.equal(getRequiredRowSize(false, [[9999, 2], [0, 1]]), 1);
+        assert.equal(getRequiredRowSize(false, [[1000, 2], [0, 1]]), 2);
+    });
+    it('getRequiredRowSize should default to -1', () => {
+        assert.equal(getRequiredRowSize(false, []), -1);
+    });
+    it('unsetHeights should remove height from element style property', () => {
+        const element = document.createElement('div');
+        element.style.width = '100px';
+        element.style.height = '100px';
+        document.body.appendChild(element);
+
+        assert.equal(element.style.height, '100px');
+        unsetHeights([element]);
+        assert.isEmpty(element.style.height);
+        document.body.innerHTML = '';
+    });
+    it('updateRow should not update element if only one element is pased', () => {
+        const element = document.createElement('div');
+        element.style.width = '100px';
+        element.style.height = '100px';
+        document.body.appendChild(element);
+
+        assert.equal(element.style.height, '100px');
+        updateRow([element]);
+        assert.equal(element.style.height, '100px');
+        document.body.innerHTML = '';
+    });
+    it('updateRow should update element heights to largest found size', () => {
+        const elements = [
+            {
+                offsetHeight: 100,
+                style: {
+                    height: '100px'
+                }
+            },
+            {
+                offsetHeight: 200,
+                style: {
+                    height: '200px'
+                }
+            }
+        ];
+
+        assert.equal(elements[0].style.height, '100px');
+        updateRow(elements);
+        assert.equal(elements[0].style.height, '200px');
+    });
+    it('startResize correctly resizes items into rows', () => {
+        window.resizeTo(2000);
+        const elements = [];
+        const element = {
+            offsetHeight: 100,
+            style: {
+                height: '100px',
+                removeProperty: (prop) => {}
+            }
+        };
+        for (let i=0; i<20; i++) {
+            elements.push(cloneDeep(element));
+        }
+        elements[19].offsetHeight = 200;
+        elements[19].style.height = '200px';
+        startResize(elements, {global: false, widths: [[1000, 10], [0, 1]]});
+
+        assert.equal(elements[0].style.height, '100px');
+        assert.equal(elements[10].style.height, '200px');
+    });
 });
 
 describe('Callback functions', () => {
@@ -177,5 +270,32 @@ describe('Option validation', () => {
         new ResponsiveHeight(null, {delay: false});
         assert(spy.calledWith('Errors found in options'));
         spy.restore();
+    });
+});
+
+describe('Plugin API', () => {
+    it('update triggers a resize', () => {
+        window.resizeTo(2000);
+        const elements = {
+            children: []
+        };
+        const element = {
+            offsetHeight: 100,
+            style: {
+                height: '100px',
+                removeProperty: () => {}
+            }
+        };
+        for (let i=0; i<20; i++) {
+            elements.children.push(cloneDeep(element));
+        }
+        const api = new ResponsiveHeight(elements, {global: false, widths: [[1000, 10], [0, 1]]});
+
+        assert.equal(elements.children[0].style.height, '100px');
+        assert.notEqual(elements.children[10].style.height, '200px');
+        elements.children[19].offsetHeight = 200;
+        elements.children[19].style.height = '200px';
+        api.update();
+        assert.equal(elements.children[10].style.height, '200px');
     });
 });
