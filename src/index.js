@@ -211,7 +211,7 @@ export class ResponsiveHeight {
      * @param {element} el   html cotnainer element
      * @param {object} opts options object
      */
-    constructor(el, opts) {
+    constructor(el, opts = {}) {
         this.container = el;
         this.options = mergeObjects(opts, defaultOptions);
         this.handleResize = debounce(() => { this.refresh(); }, this.options.delay);

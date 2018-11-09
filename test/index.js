@@ -232,6 +232,10 @@ describe('Callback functions', () => {
 });
 
 describe('Option validation', () => {
+    it('loads defaults when no options passed', () => {
+        const api = new ResponsiveHeight(null);
+        assert.equal(api.options.global, false);
+    });
     it('global should be a boolean', () => {
         function func(attr) {
             return validateOptions(mergeObjects({ global: attr }, defaultOptions));
