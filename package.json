@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
   "main": "lib/index.js",
+  "files": [
+      "/lib"
+  ],
   "scripts": {
     "test": "nyc mocha --require @babel/register --require ./test/helpers/dom.js",
     "watch": "npm run build -- --source-maps -watch",
-    "build": "babel src --out-dir lib --presets=@babel/preset-env",
-    "lint": "node_modules/.bin/eslint . --ext .js --ignore-pattern '/lib/'"
+    "build": "node_modules/.bin/rimraf lib && babel src --out-dir lib --presets=@babel/preset-env",
+    "lint": "node_modules/.bin/eslint . --ext .js --ignore-pattern '/lib/'",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
   },
   "repository": {
     "type": "git",
@@ -36,6 +42,7 @@
     "jsdom": "^13.0.0",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
+    "rimraf": "^2.6.2",
     "sinon": "^7.1.1"
   },
   "babel": {
