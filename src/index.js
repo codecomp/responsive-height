@@ -10,7 +10,6 @@ export const defaultOptions = {
     exclude_set:    null,
     before_init:    null,
     after_init:     null,
-    window_resize:  null,
     before_resize:  null,
     after_resize:   null,
     after_destroy:  null
@@ -35,7 +34,7 @@ export function validateOptions(options) {
     }
 
     // Callabcks must be null or a function
-    for (const attribute of ['before_init', 'after_init', 'window_resize', 'before_resize', 'after_resize', 'after_destroy']) { // eslint-disable-line max-len
+    for (const attribute of ['before_init', 'after_init', 'before_resize', 'after_resize', 'after_destroy']) { // eslint-disable-line max-len
         if (typeof options[attribute] !== 'function' && options[attribute] !== null){
             set(errors, `${attribute}.type`, `${attribute} option is not a valid callback`);
         }
