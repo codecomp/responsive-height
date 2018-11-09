@@ -321,7 +321,7 @@ describe('Plugin API', () => {
         assert.notEqual(elements.children[10].style.height, '200px');
         elements.children[19].offsetHeight = 200;
         elements.children[19].style.height = '200px';
-        api.resize();
+        api.refresh();
         assert.equal(elements.children[10].style.height, '200px');
     });
 });

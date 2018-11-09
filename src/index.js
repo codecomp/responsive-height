@@ -148,7 +148,7 @@ export function unsetHeights(elements) {
 }
 
 /**
- * update heights of supplied row of elemenrts
+ * Update heights of supplied row of elemenrts
  * @param  {array} array of elements to resize
  * @return
  */
@@ -205,13 +205,22 @@ export function startResize(elements, options) {
  * @type {class}
  */
 export class ResponsiveHeight {
+
+    /**
+     * Construct the instance
+     * @param {element} el   html cotnainer element
+     * @param {object} opts options object
+     */
     constructor(el, opts) {
         this.container = el;
         this.options = mergeObjects(opts, defaultOptions);
-        this.handleResize = debounce(() => { this.resize(); }, this.options.delay);
+        this.handleResize = debounce(() => { this.refresh(); }, this.options.delay);
         this.init();
     }
 
+    /**
+     * Initialise the module
+     */
     init() {
         const validation = validateOptions(this.options);
         if ( !isEmpty(validation) ) {
@@ -244,10 +253,16 @@ export class ResponsiveHeight {
         }
     }
 
-    resize() {
+    /**
+     * Trigger resize event
+     */
+    refresh() {
         startResize(this.elements, this.options);
     }
 
+    /**
+     * Reset the container and elements to their default state
+     */
     destroy() {
         unsetHeights(this.elements);
         window.removeEventListener('resize', this.handleResize);
