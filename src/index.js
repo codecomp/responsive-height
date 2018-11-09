@@ -224,7 +224,7 @@ export class ResponsiveHeight {
             startResize(this.elements, this.options);
 
             // Bind resize evenrt
-            window.addEventListener('resize', debounce(() => { this.update(); }, 200));
+            window.addEventListener('resize', debounce(() => { this.update(); }, this.options.delay));
 
             if ( typeof this.options.after_init === 'function' ) {
                 this.options.after_init();
