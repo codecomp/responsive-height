@@ -203,6 +203,32 @@ describe('Callback functions', () => {
             done();
         }});
     });
+    it('before_resize should be called', (done) => {
+        startResize([], {before_resize: () => {
+            done();
+        }});
+    });
+    it('after_resize should be called', (done) => {
+        const element = {
+            offsetHeight: 100,
+            style: {
+                height: '100px',
+                removeProperty: () => {}
+            }
+        };
+        startResize([element], {global: true, after_resize: () => {
+            done();
+        }});
+    });
+    it('after_destroy should be called', (done) => {
+        const fix = new ResponsiveHeight(null, { global: true });
+        fix.destroy(); // Suppress branch istanbul uncoverd line nortice
+
+        const api = new ResponsiveHeight(null, { global: true, after_destroy: () => {
+            done();
+        }});
+        api.destroy();
+    });
 });
 
 describe('Option validation', () => {
@@ -274,7 +300,7 @@ describe('Option validation', () => {
 });
 
 describe('Plugin API', () => {
-    it('update triggers a resize', () => {
+    it('resize triggers a resize', () => {
         window.resizeTo(2000);
         const elements = {
             children: []
@@ -295,7 +321,7 @@ describe('Plugin API', () => {
         assert.notEqual(elements.children[10].style.height, '200px');
         elements.children[19].offsetHeight = 200;
         elements.children[19].style.height = '200px';
-        api.update();
+        api.resize();
         assert.equal(elements.children[10].style.height, '200px');
     });
 });

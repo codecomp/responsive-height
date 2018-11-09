@@ -175,6 +175,10 @@ export function updateRow(row) {
  * @return
  */
 export function startResize(elements, options) {
+    // trigger callback
+    if ( typeof options.before_resize === 'function' ) {
+        options.before_resize();
+    }
     // remove old heights from elements
     unsetHeights(elements);
     // work out needed number of collumns required per row
@@ -190,6 +194,10 @@ export function startResize(elements, options) {
     for (const row of rows) {
         updateRow(row);
     }
+    // trigger callback
+    if ( typeof options.after_resize === 'function' ) {
+        options.after_resize();
+    }
 }
 
 /**
@@ -200,6 +208,7 @@ export class ResponsiveHeight {
     constructor(el, opts) {
         this.container = el;
         this.options = mergeObjects(opts, defaultOptions);
+        this.handleResize = debounce(() => { this.resize(); }, this.options.delay);
         this.init();
     }
 
@@ -213,6 +222,7 @@ export class ResponsiveHeight {
 
         } else {
 
+            // trigger clalback
             if ( typeof this.options.before_init === 'function' ) {
                 this.options.before_init();
             }
@@ -224,8 +234,9 @@ export class ResponsiveHeight {
             startResize(this.elements, this.options);
 
             // Bind resize evenrt
-            window.addEventListener('resize', debounce(() => { this.update(); }, this.options.delay));
+            window.addEventListener('resize', this.handleResize);
 
+            // trigger clalback
             if ( typeof this.options.after_init === 'function' ) {
                 this.options.after_init();
             }
@@ -233,7 +244,17 @@ export class ResponsiveHeight {
         }
     }
 
-    update() {
+    resize() {
         startResize(this.elements, this.options);
+    }
+
+    destroy() {
+        unsetHeights(this.elements);
+        window.removeEventListener('resize', this.handleResize);
+
+        // trigger clalback
+        if ( typeof this.options.after_destroy === 'function' ) {
+            this.options.after_destroy();
+        }
     }
 }
