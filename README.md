@@ -1,6 +1,6 @@
 # Responsive height
 
-[![Build Status](https://travis-ci.org/codecomp/responsive-height.svg?branch=master)](https://travis-ci.org/codecomp/responsive-height)  [![dependencies Status](https://david-dm.org/codecomp/responsive-height/status.svg)](https://david-dm.org/codecomp/responsive-height)  [![devDependencies Status](https://david-dm.org/codecomp/responsive-height/dev-status.svg)](https://david-dm.org/codecomp/responsive-height?type=dev) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/codecomp/responsive-height.svg?branch=master)](https://travis-ci.org/codecomp/responsive-height)  [![dependencies Status](https://david-dm.org/codecomp/responsive-height/status.svg)](https://david-dm.org/codecomp/responsive-height)  [![devDependencies Status](https://david-dm.org/codecomp/responsive-height/dev-status.svg)](https://david-dm.org/codecomp/responsive-height?type=dev)  [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://istanbul.js.org/)  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint.
 
