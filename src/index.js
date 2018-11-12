@@ -237,7 +237,7 @@ export class ResponsiveHeight {
             }
 
             // Collect an array of elements to run logic on
-            this.elements = collectElememnts(this.container, this.options.child);
+            this.collect();
 
             // Run initial resize event
             startResize(this.elements, this.options);
@@ -258,6 +258,13 @@ export class ResponsiveHeight {
      */
     refresh() {
         startResize(this.elements, this.options);
+    }
+
+    /**
+     * Colelct elements to be used for resizing
+     */
+    collect() {
+        this.elements = collectElememnts(this.container, this.options.child);
     }
 
     /**

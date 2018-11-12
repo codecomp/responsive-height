@@ -41,9 +41,10 @@ after_destroy *(function)* | null | Callback function called after destroy metho
 
 Method | Details
 ------------- | -------------
-refresh | Immediately trigger a recalculation of the heights for all elements  based off the existing settings
-destroy | Removes the heights off all elements or their children and stops further processing
-init | Re initialises the plugin causing an immediate refresh and re binding the resizing of the window to trigger further refreshes
+refresh | Immediately trigger a recalculation of the heights for all elements  based off the existing settings.
+collect | Recollect the elements that will be resized, to be run after adding new items. This will not trigger a refresh of the sizes.
+destroy | Removes the heights off all elements or their children and stops further processing.
+init | Re initialises the plugin causing an immediate refresh and re binding the resizing of the window to trigger further refreshes.
 
 ## Example usage
 
@@ -92,7 +93,6 @@ controller.init();
 
 ## TODO
 
-- Add update method to allow for recollection of container elements / children without having to destroy and init
 - Tie in exclude_get and exclude_set functionality to take in css querySelector or HTML element
 - Setup container to take in a CSS querySelector or HTML element
 - Setup container to handle multiple elements at once
