@@ -201,6 +201,19 @@ export function startResize(elements, options) {
 }
 
 /**
+ * collec tthe container element depending if a string or the element its self was passed
+ * @param  {string | object} value the container element passed
+ * @return {object}          container element
+ */
+export function collectContainer(value) {
+    if (typeof value === 'string') {
+        return document.querySelector(value);
+    }
+
+    return value;
+}
+
+/**
  * Module entrypoint
  * @type {class}
  */
@@ -211,8 +224,8 @@ export class ResponsiveHeight {
      * @param {element} el   html cotnainer element
      * @param {object} opts options object
      */
-    constructor(el, opts = {}) {
-        this.container = el;
+    constructor(container, opts = {}) {
+        this.container = collectContainer(container);
         this.options = mergeObjects(opts, defaultOptions);
         this.handleResize = debounce(() => { this.refresh(); }, this.options.delay);
         this.init();

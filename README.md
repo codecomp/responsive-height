@@ -94,7 +94,6 @@ controller.init();
 ## TODO
 
 - Tie in exclude_get and exclude_set functionality to take in css querySelector or HTML element
-- Setup container to take in a CSS querySelector or HTML element
 - Setup container to handle multiple elements at once
 
 ## Credits

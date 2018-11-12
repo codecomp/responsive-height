@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import { mergeObjects, debounce } from '../src/utils';
 import { cloneDeep } from 'lodash';
-import { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, ResponsiveHeight } from '../src'; // eslint-disable-line max-len
+import { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, collectContainer, ResponsiveHeight } from '../src'; // eslint-disable-line max-len
 
 describe('Helpers', () => {
     it('documet and window should exist', () => {
@@ -189,6 +189,15 @@ describe('Export functions', () => {
 
         assert.equal(elements[0].style.height, '100px');
         assert.equal(elements[10].style.height, '200px');
+    });
+    it('collectContainer should return an element if passed a CSS querySelector', () => {
+        const element = document.createElement('div');
+        element.classList = 'container';
+        document.body.appendChild(element);
+
+        assert.equal(collectContainer('.container'), element);
+        assert. notEqual(collectContainer('.fail'), element);
+        document.body.innerHTML = '';
     });
 });
 
