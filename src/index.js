@@ -1,5 +1,5 @@
 import { set, isEmpty, toArray, chunk } from 'lodash';
-import { debounce, mergeObjects } from './utils';
+import { debounce, mergeObjects, isElement, isNodeList } from './utils';
 
 export const defaultOptions = {
     global:         false,
@@ -40,10 +40,20 @@ export function validateOptions(options) {
         }
     }
 
-    // CSS selector paramaters bust be a string or null
-    for (const attribute of ['child', 'exclude_get', 'exclude_set']) {
-        if (typeof options[attribute] !== 'string' && options[attribute] !== null){
-            set(errors, `${attribute}.type`, `${attribute} option must be a string or null`);
+    // Child must be a string or null
+    if (typeof options.child !== 'string' && options.child !== null && options.child !== ''){
+        set(errors, 'child.type', 'child option must be a string or null');
+    }
+
+    // Exclusions should be a string, NodeList, element or null
+    for (const attribute of ['exclude_get', 'exclude_set']) {
+        if (
+            options[attribute] !== null &&
+            typeof options[attribute] !== 'string' &&
+            !isElement(options[attribute]) &&
+            !isNodeList(options[attribute])
+        ){
+            set(errors, `${attribute}.type`, `${attribute} option must be a string, Nodelist, element or null`);
         }
     }
 
@@ -152,7 +162,7 @@ export function unsetHeights(elements) {
  * @param  {array} array of elements to resize
  * @return
  */
-export function updateRow(row) {
+export function updateRow(row, excludeGet = [], excludeSet = []) {
     // If we only have one row reset the heights
     if ( row.length === 1 ){
         return;
@@ -160,11 +170,15 @@ export function updateRow(row) {
     // calculate largest element in row
     let maxHeight = 0;
     for (const el of row) {
-        maxHeight = el.offsetHeight > maxHeight ? el.offsetHeight : maxHeight;
+        if (!excludeGet.includes(el)){
+            maxHeight = el.offsetHeight > maxHeight ? el.offsetHeight : maxHeight;
+        }
     }
     // set heights of all elements in row
     for (const el of row) {
-        el.style.height = `${maxHeight}px`;
+        if (!excludeSet.includes(el)){
+            el.style.height = `${maxHeight}px`;
+        }
     }
 }
 
@@ -174,7 +188,7 @@ export function updateRow(row) {
  * @param  {object} options
  * @return
  */
-export function startResize(elements, options) {
+export function startResize(elements, options, exclude) {
     // trigger callback
     if ( typeof options.before_resize === 'function' ) {
         options.before_resize();
@@ -192,7 +206,7 @@ export function startResize(elements, options) {
     }
     // Update rows
     for (const row of rows) {
-        updateRow(row);
+        updateRow(row, exclude.get, exclude.set);
     }
     // trigger callback
     if ( typeof options.after_resize === 'function' ) {
@@ -211,6 +225,31 @@ export function collectContainer(value) {
     }
 
     return value;
+}
+
+/**
+ * Collect elemenets used for exclusion of getting / setting based on user options
+ * @param  {mixed} value
+ * @return {array}
+ */
+export function collectExclude(value) {
+    if (!value) {
+        return [];
+    }
+
+    if (typeof value === 'string') {
+        return toArray(document.querySelectorAll(value));
+    }
+
+    if (isElement(value)) {
+        return [value];
+    }
+
+    if (isNodeList(value)) {
+        return toArray(value);
+    }
+
+    return [];
 }
 
 /**
@@ -253,7 +292,7 @@ export class ResponsiveHeight {
             this.collect();
 
             // Run initial resize event
-            startResize(this.elements, this.options);
+            startResize(this.elements, this.options, this.exclude);
 
             // Bind resize evenrt
             window.addEventListener('resize', this.handleResize);
@@ -270,7 +309,7 @@ export class ResponsiveHeight {
      * Trigger resize event
      */
     refresh() {
-        startResize(this.elements, this.options);
+        startResize(this.elements, this.options, this.exclude);
     }
 
     /**
@@ -278,6 +317,10 @@ export class ResponsiveHeight {
      */
     collect() {
         this.elements = collectElememnts(this.container, this.options.child);
+        this.exclude = {
+            get: collectExclude(this.options.exclude_get),
+            set: collectExclude(this.options.exclude_set)
+        };
     }
 
     /**

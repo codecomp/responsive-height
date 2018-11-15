@@ -28,8 +28,8 @@ Option  | Default | Details
 delay *(int)*  | 200 | Delay between resize of the screen and the recalculation of the required heights. This can be set to 0 and no delay will be factored in.
 child *(string)*  | null | Selector for the child element to be found inside the main selector. If this is set the height will be calculated and set to this element instead of the parent. However the parent will be used for calculating columns.
 global *(boolean)* | false | If global is set to true it will ignore the widths option and set all elements (or their children) to the same height.
-exclude_get *(selector)* | null | Setting Exclude get with a css query selector will stop the elements with this selector from having their heights factor into the heights of the other elements in its row.
-exclude_set *(selector)* | null | Setting Exclude set with a css query selector will stop the element (or child element if specified) from having its height set.
+exclude_get *(selector | element | nodeList)* | null | Setting Exclude get with a css query selector, element or nodeList will stop the element (or child element if specified) from having their heights factor into the heights of the other elements in its row. If using child elements exclusions will be applied based on the child.
+exclude_set *(selector | element | nodeList)* | null | Setting Exclude set with a css query selector, element or nodeList will stop the element (or child element if specified) from having its height set. If using child elements exclusions will be applied based on the child.
 widths *(array)* | empty Array | A multi dimensional array of pixel widths and columns starting from the heights to lowest. This checks if the size is greater than a size, if so it sets the columns.
 before_init *(function)* | null | Callback function called before initialisation.
 after_init *(function)* | null | Callback function called after initialisation has finished.
@@ -93,7 +93,6 @@ controller.init();
 
 ## TODO
 
-- Tie in exclude_get and exclude_set functionality to take in css querySelector or HTML element
 - Setup container to handle multiple elements at once
 
 ## Credits

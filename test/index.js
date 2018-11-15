@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { mergeObjects, debounce } from '../src/utils';
+import { mergeObjects, debounce, isElement, isNodeList } from '../src/utils';
 import { cloneDeep } from 'lodash';
-import { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, collectContainer, ResponsiveHeight } from '../src'; // eslint-disable-line max-len
+import { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, collectContainer, collectExclude, ResponsiveHeight } from '../src'; // eslint-disable-line max-len
 
 describe('Helpers', () => {
     it('documet and window should exist', () => {
@@ -80,6 +80,26 @@ describe('Utility functions', () => {
             assert.isFalse(result);
             done();
         }, 20);
+    });
+    it('isElement should correctly identify a DOM element', () => {
+        const element = document.createElement('div');
+
+        assert.isTrue(isElement(element));
+        assert.isFalse(isElement(false));
+        assert.isFalse(isElement('string'));
+    });
+    it('isNodeList should correctly identify a NodeList', () => {
+        const container = document.createElement('div');
+        const element = '<div class="child"></div>';
+        container.innerHTML = element.repeat(10);
+        document.body.appendChild(container);
+
+        assert.isTrue(isNodeList(document.querySelectorAll('.child')));
+        assert.isFalse(isNodeList(document.querySelector('.child')));
+        assert.isFalse(isNodeList({}));
+        assert.isFalse(isNodeList(false));
+        assert.isFalse(isNodeList('string'));
+        document.body.innerHTML = '';
     });
 });
 
@@ -170,6 +190,28 @@ describe('Export functions', () => {
         updateRow(elements);
         assert.equal(elements[0].style.height, '200px');
     });
+    it('updateRow should respect exclusions', () => {
+        const elements = [
+            {
+                offsetHeight: 100,
+                style: {
+                    height: '100px'
+                }
+            },
+            {
+                offsetHeight: 200,
+                style: {
+                    height: '200px'
+                }
+            }
+        ];
+
+        assert.equal(elements[0].style.height, '100px');
+        updateRow(elements, [elements[1]], []);
+        assert.equal(elements[0].style.height, '100px');
+        updateRow(elements, [], [elements[0]]);
+        assert.equal(elements[0].style.height, '100px');
+    });
     it('startResize correctly resizes items into rows', () => {
         window.resizeTo(2000);
         const elements = [];
@@ -185,7 +227,7 @@ describe('Export functions', () => {
         }
         elements[19].offsetHeight = 200;
         elements[19].style.height = '200px';
-        startResize(elements, {global: false, widths: [[1000, 10], [0, 1]]});
+        startResize(elements, {global: false, widths: [[1000, 10], [0, 1]]}, {get: [], set: []});
 
         assert.equal(elements[0].style.height, '100px');
         assert.equal(elements[10].style.height, '200px');
@@ -196,7 +238,21 @@ describe('Export functions', () => {
         document.body.appendChild(element);
 
         assert.equal(collectContainer('.container'), element);
-        assert. notEqual(collectContainer('.fail'), element);
+        assert.notEqual(collectContainer('.fail'), element);
+        document.body.innerHTML = '';
+    });
+    it('collectExclude should return an array of the required elements', () => {
+        const element = document.createElement('div');
+        element.classList = 'element';
+        document.body.appendChild(element);
+
+        assert.isArray(collectExclude(false));
+        assert.isArray(collectExclude(true));
+        assert.isArray(collectExclude(null));
+        assert.equal(collectExclude('.element')[0], element);
+        assert.equal(collectExclude(element)[0], element);
+        assert.equal(collectExclude(document.querySelector('.element'))[0], element);
+        assert.equal(collectExclude(document.querySelectorAll('.element'))[0], element);
         document.body.innerHTML = '';
     });
 });
@@ -215,7 +271,8 @@ describe('Callback functions', () => {
     it('before_resize should be called', (done) => {
         startResize([], {before_resize: () => {
             done();
-        }});
+        }},
+        {get: [], set: []});
     });
     it('after_resize should be called', (done) => {
         const element = {
@@ -227,7 +284,8 @@ describe('Callback functions', () => {
         };
         startResize([element], {global: true, after_resize: () => {
             done();
-        }});
+        }},
+        {get: [], set: []});
     });
     it('after_destroy should be called', (done) => {
         const fix = new ResponsiveHeight(null, { global: true });
@@ -265,7 +323,7 @@ describe('Option validation', () => {
         assert.notNestedProperty(func(100), 'delay.type');
         assert.notNestedProperty(func(0), 'delay.type');
     });
-    it('css selectors should be a string or null', () => {
+    it('child selectors should be a string or null', () => {
         function func(attr) {
             return validateOptions(mergeObjects({ child: attr }, defaultOptions));
         }
@@ -273,6 +331,17 @@ describe('Option validation', () => {
         assert.nestedProperty(func(true), 'child.type');
         assert.notNestedProperty(func('.class'), 'child.type');
         assert.notNestedProperty(func(null), 'child.type');
+    });
+    it('exclusions should be a string, NodeList, element or null', () => {
+        const element = document.createElement('div');
+        function func(attr) {
+            return validateOptions(mergeObjects({ exclude_get: attr }, defaultOptions));
+        }
+        assert.nestedProperty(func(1), 'exclude_get.type');
+        assert.nestedProperty(func(true), 'exclude_get.type');
+        assert.notNestedProperty(func('.class'), 'exclude_get.type');
+        assert.notNestedProperty(func(null), 'exclude_get.type');
+        assert.notNestedProperty(func(element), 'exclude_get.type');
     });
     it('widths should be an array', () => {
         function func(attr) {

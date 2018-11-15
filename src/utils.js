@@ -32,3 +32,41 @@ export function debounce(fn, ms) {
         }, ms);
     };
 }
+
+/**
+ * Determine if passed object is a DOM elment
+ * @param  {object}  obj
+ * @return {Boolean}
+ *
+ * https://stackoverflow.com/questions/384286/javascript-isdom-how-do-you-check-if-a-javascript-object-is-a-dom-object
+ */
+export function isElement(obj) {
+    try {
+        //Using W3 DOM2 (works for FF, Opera and Chrome)
+        return obj instanceof HTMLElement;
+    }
+    catch (e){
+        //Browsers not supporting W3 DOM2 don't have HTMLElement and
+        //an exception is thrown and we end up here. Testing some
+        //properties that all elements have (works on IE7)
+        return (typeof obj === 'object') &&
+            (obj.nodeType === 1) && (typeof obj.style === 'object') &&
+            (typeof obj.ownerDocument === 'object');
+    }
+}
+
+/**
+ * Determine if a passed object is a nodelist
+ * @param  {object}  obj
+ * @return {Boolean}
+ *
+ * https://gist.github.com/Tomalak/818a78a226a0738eaade
+ */
+export function isNodeList(obj) {
+    const stringRepr = Object.prototype.toString.call(obj);
+
+    return typeof obj === 'object' &&
+        /^\[object (HTMLCollection|NodeList|Object)\]$/.test(stringRepr) &&
+        typeof obj.length !== 'undefined' &&
+        (obj.length === 0 || (typeof obj[0] === 'object' && obj[0].nodeType > 0));
+}
