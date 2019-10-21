@@ -4,7 +4,7 @@
   "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
   "main": "lib/index.js",
   "files": [
-      "/lib"
+    "/lib"
   ],
   "scripts": {
     "test": "nyc mocha --require @babel/register --require ./test/helpers/dom.js",
@@ -56,6 +56,6 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.15"
   }
 }
