@@ -1,6 +1,6 @@
 {
   "name": "responsive-height",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
   "main": "lib/index.js",
   "files": [
