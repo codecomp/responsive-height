@@ -1,6 +1,6 @@
 {
   "name": "responsive-height",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
   "main": "lib/index.js",
   "files": [
@@ -31,19 +31,19 @@
   },
   "homepage": "https://github.com/codecomp/responsive-height#readme",
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/register": "^7.0.0",
-    "babel-eslint": "^10.0.1",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
+    "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
-    "eslint": "^5.8.0",
-    "eslint-plugin-mocha": "^5.2.0",
-    "jsdom": "^13.0.0",
+    "eslint": "^7.17.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "jsdom": "^16.4.0",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
-    "rimraf": "^2.6.2",
-    "sinon": "^7.1.1"
+    "rimraf": "^3.0.2",
+    "sinon": "^9.2.3"
   },
   "babel": {
     "presets": [
