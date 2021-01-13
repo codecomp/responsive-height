@@ -1,6 +1,6 @@
 {
   "name": "responsive-height",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
   "main": "lib/index.js",
   "files": [
@@ -40,8 +40,8 @@
     "eslint": "^5.8.0",
     "eslint-plugin-mocha": "^5.2.0",
     "jsdom": "^13.0.0",
-    "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
     "rimraf": "^2.6.2",
     "sinon": "^7.1.1"
   },
@@ -56,6 +56,6 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.20"
   }
 }
