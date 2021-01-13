@@ -1,6 +1,6 @@
 {
   "name": "responsive-height",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
   "main": "lib/index.js",
   "files": [
@@ -10,7 +10,7 @@
     "test": "nyc mocha --require @babel/register --require ./test/helpers/dom.js",
     "watch": "npm run build -- --source-maps -watch",
     "build": "node_modules/.bin/rimraf lib && babel src --out-dir lib --presets=@babel/preset-env",
-    "lint": "node_modules/.bin/eslint . --ext .js --ignore-pattern '/lib/'",
+    "lint": "node_modules/.bin/eslint . --ext .js --ignore-pattern \"/lib/*\"",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint"
