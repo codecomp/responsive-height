@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import { mergeObjects, debounce, isElement, isNodeList } from '../src/utils';
 import { cloneDeep } from 'lodash';
-import { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, collectContainer, collectExclude, ResponsiveHeight } from '../src'; // eslint-disable-line max-len
+import ResponsiveHeight, { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, collectContainer, collectExclude } from '../src'; // eslint-disable-line max-len
 
 describe('Helpers', () => {
     it('documet and window should exist', () => {

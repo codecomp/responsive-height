@@ -256,7 +256,7 @@ export function collectExclude(value) {
  * Module entrypoint
  * @type {class}
  */
-export class ResponsiveHeight {
+export default class ResponsiveHeight {
 
     /**
      * Construct the instance
