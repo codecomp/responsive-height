@@ -45,16 +45,6 @@
     "rimraf": "^3.0.2",
     "sinon": "^9.2.3"
   },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "modules": "commonjs"
-        }
-      ]
-    ]
-  },
   "dependencies": {
     "lodash": "^4.17.20"
   }
