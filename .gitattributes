@@ -1,0 +1,2 @@
+#Force JavaScript line endings to match what is expected during linting
+*.js eol=lf
