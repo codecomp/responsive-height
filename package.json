@@ -9,7 +9,7 @@
   "scripts": {
     "test": "nyc mocha --require @babel/register --require ./test/helpers/dom.js",
     "watch": "npm run build -- --source-maps -watch",
-    "build": "node_modules/.bin/rimraf lib && babel src --out-dir lib --presets=@babel/preset-env",
+    "build": "node_modules/.bin/rimraf lib && babel src --out-dir lib",
     "lint": "node_modules/.bin/eslint . --ext .js --ignore-pattern \"/lib/*\"",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
