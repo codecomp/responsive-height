@@ -1,8 +1,7 @@
 # Responsive height
+![dependencies Status](https://img.shields.io/librariesio/github/codecomp/responsive-height) [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://istanbul.js.org/)  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-[![Build Status](https://travis-ci.org/codecomp/responsive-height.svg?branch=master)](https://travis-ci.org/codecomp/responsive-height)  [![dependencies Status](https://status.david-dm.org/gh/codecomp/responsive-height.svg)](https://david-dm.org/codecomp/responsive-height)  [![devDependencies Status](https://status.david-dm.org/gh/codecomp/responsive-height.svg?type=dev)](https://david-dm.org/codecomp/responsive-height?type=dev)  [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://istanbul.js.org/)  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
-A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint.
+A javaScript module to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint.
 
 ## Installing
 
