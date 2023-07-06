@@ -32,21 +32,21 @@
   },
   "homepage": "https://github.com/codecomp/responsive-height#readme",
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/register": "^7.12.10",
-    "babel-eslint": "^10.1.0",
-    "chai": "^4.2.0",
-    "eslint": "^7.17.0",
-    "eslint-plugin-mocha": "^8.0.0",
-    "jsdom": "^16.4.0",
-    "mocha": "^8.2.1",
+    "@babel/cli": "^7.22.6",
+    "@babel/core": "^7.22.6",
+    "@babel/eslint-parser": "^7.22.6",
+    "@babel/preset-env": "^7.22.6",
+    "@babel/register": "^7.22.5",
+    "chai": "^4.3.7",
+    "eslint": "^7.32.0",
+    "eslint-plugin-mocha": "^8.2.0",
+    "jsdom": "^16.7.0",
+    "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
-    "sinon": "^9.2.3"
+    "sinon": "^9.2.4"
   },
   "dependencies": {
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.21"
   }
 }
