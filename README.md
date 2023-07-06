@@ -5,7 +5,7 @@ A javaScript module to dynamically resize elements or their children to the max 
 
 ## Installing
 
-With npm / yarn / webpack
+With npm / yarn
 ```sh
 npm install responsive-height
 # or
@@ -69,6 +69,10 @@ const controller = new ResponsiveHeight(container, {
         <p class="desc">Large block of text of varying height that we want to keep the same height</p>
         <span>Some text we want to stick to the bottom</span>
     </div>
+    <div>
+        <p class="desc">Large block of text of varying height that we want to keep the same height, but this time It's much much larger and we need them to be level!</p>
+        <span>Some text we want to stick to the bottom</span>
+    </div>
     ...
 </div>
 ```
@@ -76,7 +80,7 @@ const controller = new ResponsiveHeight(container, {
 If you then updated the size of some of the content you could then trigger a recalculation of the heights.
 
 ```js
-container.children[0].querySelector('.desc').innerHTML = 'Changed the text';
+container.children[1].querySelector('.desc').innerHTML = 'Changed the text';
 controller.update();
 ```
 
@@ -93,6 +97,7 @@ controller.init();
 ## TODO
 
 - Setup container to handle multiple elements at once
+- Setup container to have an automatic mode basing the rows on the elements posiiton
 
 ## Credits
 
