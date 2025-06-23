@@ -2,7 +2,18 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import { mergeObjects, debounce, isElement, isNodeList } from '../src/utils';
 import { cloneDeep } from 'lodash';
-import ResponsiveHeight, { checkWindowWidth, defaultOptions, validateOptions, collectElememnts, getRequiredRowSize, unsetHeights, updateRow, startResize, collectContainer, collectExclude } from '../src'; // eslint-disable-line max-len
+import ResponsiveHeight, {
+    checkWindowWidth,
+    defaultOptions,
+    validateOptions,
+    collectElememnts,
+    getRequiredRowSize,
+    unsetHeights,
+    updateRow,
+    startResize,
+    collectContainer,
+    collectExclude,
+} from '../src'; // eslint-disable-line max-len
 
 describe('Helpers', () => {
     it('documet and window should exist', () => {
@@ -15,7 +26,7 @@ describe('Helpers', () => {
         assert.notEqual(width, window.innerWidth);
     });
     it('window should trigger resize event', (done) => {
-        function func(){
+        function func() {
             window.removeEventListener('resize', func);
             done();
         }
@@ -29,22 +40,22 @@ describe('Utility functions', () => {
         assert.isObject(mergeObjects({}, {}));
     });
     it('mergeObjects should overwrite default object attriburtes with new attriburtes', () => {
-        const obj = { 'test': 'user' };
-        const defaultObj = { 'test': 'default' };
+        const obj = { test: 'user' };
+        const defaultObj = { test: 'default' };
         assert.propertyVal(mergeObjects(obj, defaultObj), 'test', 'user');
     });
     it('mergeObjects should add undefined user obejct items from default', () => {
         const obj = {};
-        const defaultObj = { 'test': 'default' };
+        const defaultObj = { test: 'default' };
         assert.propertyVal(mergeObjects(obj, defaultObj), 'test', 'default');
     });
     it('debounce should return a function', () => {
-        const func = function(){};
+        const func = function () {};
         assert.isFunction(debounce(func, 100));
     });
     it('debounce should run after timeout', (done) => {
         let result = false;
-        function func(){
+        function func() {
             result = true;
         }
         const debounceFunc = debounce(func, 10);
@@ -56,7 +67,7 @@ describe('Utility functions', () => {
     });
     it('debounce should pass over attributes', (done) => {
         let result = false;
-        function func(value){
+        function func(value) {
             result = value;
         }
         const debounceFunc = debounce(func, 10);
@@ -68,7 +79,7 @@ describe('Utility functions', () => {
     });
     it('debounce should override last timeout', (done) => {
         let result = false;
-        const func = function (){
+        const func = function () {
             result = true;
         };
         const debouncedFunc = debounce(func, 15);
@@ -142,8 +153,20 @@ describe('Export functions', () => {
         window.resizeTo(2000);
 
         assert.equal(getRequiredRowSize(false, [[0, 1]]), 1);
-        assert.equal(getRequiredRowSize(false, [[9999, 2], [0, 1]]), 1);
-        assert.equal(getRequiredRowSize(false, [[1000, 2], [0, 1]]), 2);
+        assert.equal(
+            getRequiredRowSize(false, [
+                [9999, 2],
+                [0, 1],
+            ]),
+            1,
+        );
+        assert.equal(
+            getRequiredRowSize(false, [
+                [1000, 2],
+                [0, 1],
+            ]),
+            2,
+        );
     });
     it('getRequiredRowSize should default to -1', () => {
         assert.equal(getRequiredRowSize(false, []), -1);
@@ -175,15 +198,15 @@ describe('Export functions', () => {
             {
                 offsetHeight: 100,
                 style: {
-                    height: '100px'
-                }
+                    height: '100px',
+                },
             },
             {
                 offsetHeight: 200,
                 style: {
-                    height: '200px'
-                }
-            }
+                    height: '200px',
+                },
+            },
         ];
 
         assert.equal(elements[0].style.height, '100px');
@@ -195,15 +218,15 @@ describe('Export functions', () => {
             {
                 offsetHeight: 100,
                 style: {
-                    height: '100px'
-                }
+                    height: '100px',
+                },
             },
             {
                 offsetHeight: 200,
                 style: {
-                    height: '200px'
-                }
-            }
+                    height: '200px',
+                },
+            },
         ];
 
         assert.equal(elements[0].style.height, '100px');
@@ -219,15 +242,25 @@ describe('Export functions', () => {
             offsetHeight: 100,
             style: {
                 height: '100px',
-                removeProperty: () => {}
-            }
+                removeProperty: () => {},
+            },
         };
-        for (let i=0; i<20; i++) {
+        for (let i = 0; i < 20; i++) {
             elements.push(cloneDeep(element));
         }
         elements[19].offsetHeight = 200;
         elements[19].style.height = '200px';
-        startResize(elements, {global: false, widths: [[1000, 10], [0, 1]]}, {get: [], set: []});
+        startResize(
+            elements,
+            {
+                global: false,
+                widths: [
+                    [1000, 10],
+                    [0, 1],
+                ],
+            },
+            { get: [], set: [] },
+        );
 
         assert.equal(elements[0].style.height, '100px');
         assert.equal(elements[10].style.height, '200px');
@@ -259,41 +292,59 @@ describe('Export functions', () => {
 
 describe('Callback functions', () => {
     it('before_init should be called', (done) => {
-        new ResponsiveHeight(null, {before_init: () => {
-            done();
-        }});
+        new ResponsiveHeight(null, {
+            before_init: () => {
+                done();
+            },
+        });
     });
     it('after_init should be called', (done) => {
-        new ResponsiveHeight(null, {after_init: () => {
-            done();
-        }});
+        new ResponsiveHeight(null, {
+            after_init: () => {
+                done();
+            },
+        });
     });
     it('before_resize should be called', (done) => {
-        startResize([], {before_resize: () => {
-            done();
-        }},
-        {get: [], set: []});
+        startResize(
+            [],
+            {
+                before_resize: () => {
+                    done();
+                },
+            },
+            { get: [], set: [] },
+        );
     });
     it('after_resize should be called', (done) => {
         const element = {
             offsetHeight: 100,
             style: {
                 height: '100px',
-                removeProperty: () => {}
-            }
+                removeProperty: () => {},
+            },
         };
-        startResize([element], {global: true, after_resize: () => {
-            done();
-        }},
-        {get: [], set: []});
+        startResize(
+            [element],
+            {
+                global: true,
+                after_resize: () => {
+                    done();
+                },
+            },
+            { get: [], set: [] },
+        );
     });
     it('after_destroy should be called', (done) => {
         const fix = new ResponsiveHeight(null, { global: true });
         fix.destroy(); // Suppress branch istanbul uncoverd line nortice
 
-        const api = new ResponsiveHeight(null, { global: true, after_destroy: () => {
-            done();
-        }});
+        const api = new ResponsiveHeight(null, {
+            global: true,
+            after_destroy: () => {
+                done();
+            },
+        });
         api.destroy();
     });
 });
@@ -370,12 +421,15 @@ describe('Option validation', () => {
         }
         assert.nestedProperty(func(1), 'before_init.type');
         assert.nestedProperty(func(false), 'before_init.type');
-        assert.notNestedProperty(func(() => {}), 'before_init.type');
+        assert.notNestedProperty(
+            func(() => {}),
+            'before_init.type',
+        );
         assert.notNestedProperty(func(null), 'before_init.type');
     });
     it('invalid options should throw error', () => {
         const spy = sinon.stub(console, 'error');
-        new ResponsiveHeight(null, {delay: false});
+        new ResponsiveHeight(null, { delay: false });
         assert(spy.calledWith('Errors found in options'));
         spy.restore();
     });
@@ -385,19 +439,25 @@ describe('Plugin API', () => {
     it('resize triggers a resize', () => {
         window.resizeTo(2000);
         const elements = {
-            children: []
+            children: [],
         };
         const element = {
             offsetHeight: 100,
             style: {
                 height: '100px',
-                removeProperty: () => {}
-            }
+                removeProperty: () => {},
+            },
         };
-        for (let i=0; i<20; i++) {
+        for (let i = 0; i < 20; i++) {
             elements.children.push(cloneDeep(element));
         }
-        const api = new ResponsiveHeight(elements, {global: false, widths: [[1000, 10], [0, 1]]});
+        const api = new ResponsiveHeight(elements, {
+            global: false,
+            widths: [
+                [1000, 10],
+                [0, 1],
+            ],
+        });
 
         assert.equal(elements.children[0].style.height, '100px');
         assert.notEqual(elements.children[10].style.height, '200px');

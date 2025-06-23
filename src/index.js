@@ -2,17 +2,17 @@ import { set, isEmpty, toArray, chunk } from 'lodash';
 import { debounce, mergeObjects, isElement, isNodeList } from './utils';
 
 export const defaultOptions = {
-    global:         false,
-    delay:          200,
-    widths:         [],
-    child:     		null,
-    exclude_get:    null,
-    exclude_set:    null,
-    before_init:    null,
-    after_init:     null,
-    before_resize:  null,
-    after_resize:   null,
-    after_destroy:  null
+    global: false,
+    delay: 200,
+    widths: [],
+    child: null,
+    exclude_get: null,
+    exclude_set: null,
+    before_init: null,
+    after_init: null,
+    before_resize: null,
+    after_resize: null,
+    after_destroy: null,
 };
 
 /**
@@ -29,19 +29,21 @@ export function validateOptions(options) {
     }
 
     // delay must be an int of 0 or more
-    if (typeof options.delay !== 'number' || options.delay < 0 || (options.delay !== 0 && (options.delay % 1) !== 0)) { // eslint-disable-line max-len
+    if (typeof options.delay !== 'number' || options.delay < 0 || (options.delay !== 0 && options.delay % 1 !== 0)) {
+        // eslint-disable-line max-len
         set(errors, 'delay.type', 'delay option should be an integer');
     }
 
     // Callabcks must be null or a function
-    for (const attribute of ['before_init', 'after_init', 'before_resize', 'after_resize', 'after_destroy']) { // eslint-disable-line max-len
-        if (typeof options[attribute] !== 'function' && options[attribute] !== null){
+    for (const attribute of ['before_init', 'after_init', 'before_resize', 'after_resize', 'after_destroy']) {
+        // eslint-disable-line max-len
+        if (typeof options[attribute] !== 'function' && options[attribute] !== null) {
             set(errors, `${attribute}.type`, `${attribute} option is not a valid callback`);
         }
     }
 
     // Child must be a string or null
-    if (typeof options.child !== 'string' && options.child !== null && options.child !== ''){
+    if (typeof options.child !== 'string' && options.child !== null && options.child !== '') {
         set(errors, 'child.type', 'child option must be a string or null');
     }
 
@@ -52,7 +54,7 @@ export function validateOptions(options) {
             typeof options[attribute] !== 'string' &&
             !isElement(options[attribute]) &&
             !isNodeList(options[attribute])
-        ){
+        ) {
             set(errors, `${attribute}.type`, `${attribute} option must be a string, Nodelist, element or null`);
         }
     }
@@ -69,13 +71,13 @@ export function validateOptions(options) {
             }
 
             // The size must be a int of 0 or more
-            if (typeof width[0] !== 'number' || width[0] < 0 || (width[0] !== 0 && (width[0] % 1) !== 0)) {
+            if (typeof width[0] !== 'number' || width[0] < 0 || (width[0] !== 0 && width[0] % 1 !== 0)) {
                 set(errors, 'widths.format.size', 'width sizes must be an integer of 0 or more');
                 break;
             }
 
             // The column count must be an int of 1 or more
-            if (typeof width[1] !== 'number' || width[1] < 1 || (width[1] % 1) !== 0) {
+            if (typeof width[1] !== 'number' || width[1] < 1 || width[1] % 1 !== 0) {
                 set(errors, 'widths.format', 'width columns must be an integer of 1 or more');
                 break;
             }
@@ -87,16 +89,16 @@ export function validateOptions(options) {
 
 /**
  * Build object of references to objects we want to modify heigths of
- * @param  {element} container  cotnainer element
+ * @param  {HTMLElement} container  cotnainer element
  * @param  {string | null} childQuery css query sleector content
  * @return {array}
  */
 export function collectElememnts(container, childQuery) {
-    if ( !container || !container.children.length ){
+    if (!container || !container.children.length) {
         return [];
     }
 
-    if ( childQuery ){
+    if (childQuery) {
         const elements = [];
         for (const el of container.children) {
             const result = el.querySelector(childQuery);
@@ -116,11 +118,11 @@ export function collectElememnts(container, childQuery) {
  * @return {bool}
  */
 export function checkWindowWidth(width) {
-    if ( window.matchMedia ) {
+    if (window.matchMedia) {
         return window.matchMedia(`screen and (min-width:${width}px)`).matches;
     }
 
-    if ( window.innerWidth > width ){
+    if (window.innerWidth > width) {
         return true;
     }
 
@@ -134,12 +136,12 @@ export function checkWindowWidth(width) {
  * @return {integer}              number of colums to run logic on
  */
 export function getRequiredRowSize(globalOption, widthsOption) {
-    if ( globalOption ){
+    if (globalOption) {
         return -1;
     }
 
     for (const width of widthsOption) {
-        if ( checkWindowWidth(width[0]) ) {
+        if (checkWindowWidth(width[0])) {
             return width[1];
         }
     }
@@ -164,19 +166,19 @@ export function unsetHeights(elements) {
  */
 export function updateRow(row, excludeGet = [], excludeSet = []) {
     // If we only have one row reset the heights
-    if ( row.length === 1 ){
+    if (row.length === 1) {
         return;
     }
     // calculate largest element in row
     let maxHeight = 0;
     for (const el of row) {
-        if (!excludeGet.includes(el)){
+        if (!excludeGet.includes(el)) {
             maxHeight = el.offsetHeight > maxHeight ? el.offsetHeight : maxHeight;
         }
     }
     // set heights of all elements in row
     for (const el of row) {
-        if (!excludeSet.includes(el)){
+        if (!excludeSet.includes(el)) {
             el.style.height = `${maxHeight}px`;
         }
     }
@@ -190,7 +192,7 @@ export function updateRow(row, excludeGet = [], excludeSet = []) {
  */
 export function startResize(elements, options, exclude) {
     // trigger callback
-    if ( typeof options.before_resize === 'function' ) {
+    if (typeof options.before_resize === 'function') {
         options.before_resize();
     }
     // remove old heights from elements
@@ -209,7 +211,7 @@ export function startResize(elements, options, exclude) {
         updateRow(row, exclude.get, exclude.set);
     }
     // trigger callback
-    if ( typeof options.after_resize === 'function' ) {
+    if (typeof options.after_resize === 'function') {
         options.after_resize();
     }
 }
@@ -257,7 +259,6 @@ export function collectExclude(value) {
  * @type {class}
  */
 export default class ResponsiveHeight {
-
     /**
      * Construct the instance
      * @param {element} el   html cotnainer element
@@ -266,7 +267,9 @@ export default class ResponsiveHeight {
     constructor(container, opts = {}) {
         this.container = collectContainer(container);
         this.options = mergeObjects(opts, defaultOptions);
-        this.handleResize = debounce(() => { this.refresh(); }, this.options.delay);
+        this.handleResize = debounce(() => {
+            this.refresh();
+        }, this.options.delay);
         this.init();
     }
 
@@ -275,16 +278,13 @@ export default class ResponsiveHeight {
      */
     init() {
         const validation = validateOptions(this.options);
-        if ( !isEmpty(validation) ) {
-
+        if (!isEmpty(validation)) {
             console.error('Errors found in options'); // eslint-disable-line no-console
             // TODO display validaton errors to user in a clean way
             console.error(validation); // eslint-disable-line no-console
-
         } else {
-
             // trigger clalback
-            if ( typeof this.options.before_init === 'function' ) {
+            if (typeof this.options.before_init === 'function') {
                 this.options.before_init();
             }
 
@@ -298,10 +298,9 @@ export default class ResponsiveHeight {
             window.addEventListener('resize', this.handleResize);
 
             // trigger clalback
-            if ( typeof this.options.after_init === 'function' ) {
+            if (typeof this.options.after_init === 'function') {
                 this.options.after_init();
             }
-
         }
     }
 
@@ -319,7 +318,7 @@ export default class ResponsiveHeight {
         this.elements = collectElememnts(this.container, this.options.child);
         this.exclude = {
             get: collectExclude(this.options.exclude_get),
-            set: collectExclude(this.options.exclude_set)
+            set: collectExclude(this.options.exclude_set),
         };
     }
 
@@ -331,7 +330,7 @@ export default class ResponsiveHeight {
         window.removeEventListener('resize', this.handleResize);
 
         // trigger clalback
-        if ( typeof this.options.after_destroy === 'function' ) {
+        if (typeof this.options.after_destroy === 'function') {
             this.options.after_destroy();
         }
     }

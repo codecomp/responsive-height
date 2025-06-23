@@ -4,8 +4,8 @@
  * @param  {object} defaultObject defautl argument object
  * @return {object}               compiled argument object
  */
-export function mergeObjects (obj, defaultObject) {
-    obj = {...obj};
+export function mergeObjects(obj, defaultObject) {
+    obj = { ...obj };
     for (const k in defaultObject) {
         if (obj[k] === undefined) {
             obj[k] = defaultObject[k];
@@ -17,12 +17,12 @@ export function mergeObjects (obj, defaultObject) {
 /**
  * Debounce a funciton
  * @param  {Function} fn function to debounce
- * @param  {int}   ms miliseconds to deboiunce
+ * @param  {int}   ms milliseconds to deboiunce
  * @return {Function}      debounced fucntion
  */
 export function debounce(fn, ms) {
     let timerId;
-    return function(...args) {
+    return function (...args) {
         if (timerId) {
             clearTimeout(timerId);
         }
@@ -44,20 +44,22 @@ export function isElement(obj) {
     try {
         //Using W3 DOM2 (works for FF, Opera and Chrome)
         return obj instanceof HTMLElement;
-    }
-    catch (e){
+    } catch (e) {
         //Browsers not supporting W3 DOM2 don't have HTMLElement and
         //an exception is thrown and we end up here. Testing some
         //properties that all elements have (works on IE7)
-        return (typeof obj === 'object') &&
-            (obj.nodeType === 1) && (typeof obj.style === 'object') &&
-            (typeof obj.ownerDocument === 'object');
+        return (
+            typeof obj === 'object' &&
+            obj.nodeType === 1 &&
+            typeof obj.style === 'object' &&
+            typeof obj.ownerDocument === 'object'
+        );
     }
 }
 
 /**
- * Determine if a passed object is a nodelist
- * @param  {object}  obj
+ * Determine if a passed object is a NodeList
+ * @param  {NodeList}  obj
  * @return {Boolean}
  *
  * https://gist.github.com/Tomalak/818a78a226a0738eaade
@@ -65,8 +67,10 @@ export function isElement(obj) {
 export function isNodeList(obj) {
     const stringRepr = Object.prototype.toString.call(obj);
 
-    return typeof obj === 'object' &&
+    return (
+        typeof obj === 'object' &&
         /^\[object (HTMLCollection|NodeList|Object)\]$/.test(stringRepr) &&
         typeof obj.length !== 'undefined' &&
-        (obj.length === 0 || (typeof obj[0] === 'object' && obj[0].nodeType > 0));
+        (obj.length === 0 || (typeof obj[0] === 'object' && obj[0].nodeType > 0))
+    );
 }

@@ -1,52 +1,62 @@
 {
-  "name": "responsive-height",
-  "version": "1.2.0",
-  "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
-  "main": "lib/index.js",
-  "files": [
-    "/lib"
-  ],
-  "scripts": {
-    "test": "nyc mocha --require @babel/register --require ./test/helpers/dom.js",
-    "docker:watch": "CHOKIDAR_USEPOLLING=true npm run watch",
-    "watch": "npm run build -- --source-maps --watch --verbose",
-    "build": "node_modules/.bin/rimraf lib && babel src --out-dir lib",
-    "lint": "node_modules/.bin/eslint . --ext .js --ignore-pattern \"/lib/*\"",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://Codecomp@github.com/codecomp/responsive-height.git"
-  },
-  "keywords": [
-    "responsive",
-    "height",
-    "plugin"
-  ],
-  "author": "Chris Morris",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/codecomp/responsive-height/issues"
-  },
-  "homepage": "https://github.com/codecomp/responsive-height#readme",
-  "devDependencies": {
-    "@babel/cli": "^7.22.6",
-    "@babel/core": "^7.22.6",
-    "@babel/eslint-parser": "^7.22.6",
-    "@babel/preset-env": "^7.22.6",
-    "@babel/register": "^7.22.5",
-    "chai": "^4.3.7",
-    "eslint": "^7.32.0",
-    "eslint-plugin-mocha": "^8.2.0",
-    "jsdom": "^16.7.0",
-    "mocha": "^10.2.0",
-    "nyc": "^15.1.0",
-    "rimraf": "^3.0.2",
-    "sinon": "^9.2.4"
-  },
-  "dependencies": {
-    "lodash": "^4.17.21"
-  }
+    "name": "responsive-height",
+    "version": "1.2.0",
+    "description": "A javaScript plugin to dynamically resize elements or their children to the max height based on the number of columns required at a specific breakpoint",
+    "main": "lib/index.js",
+    "files": [
+        "/lib"
+    ],
+    "scripts": {
+        "docker:watch": "CHOKIDAR_USEPOLLING=true npm run watch:build",
+        "build": "rimraf lib && babel src --out-dir lib",
+        "fix": "run-s fix:*",
+        "fix:prettier": "prettier \"{src,test}/**/*.js\" --write",
+        "fix:lint": "eslint src --ext .ts --fix",
+        "test": "run-s build test:*",
+        "test:prettier": "prettier \"{src,test}/**/*.js\" --check",
+        "test:unit": "nyc mocha --require @babel/register --require ./test/helpers/dom.js",
+        "test:lint": "eslint . --ext .js --ignore-pattern \"/lib/*\"",
+        "test:spelling": "cspell \"{README.md,.github/*.md,src/**/*.js}\"",
+        "watch:build": "npm run build -- --source-maps --watch --verbose",
+        "watch:unit": "nyc mocha --require @babel/register --require ./test/helpers/dom.js --watch",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm test",
+        "prepack": "npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://Codecomp@github.com/codecomp/responsive-height.git"
+    },
+    "keywords": [
+        "responsive",
+        "height",
+        "plugin"
+    ],
+    "author": "Chris Morris",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/codecomp/responsive-height/issues"
+    },
+    "homepage": "https://github.com/codecomp/responsive-height#readme",
+    "devDependencies": {
+        "@babel/cli": "^7.22.6",
+        "@babel/core": "^7.22.6",
+        "@babel/eslint-parser": "^7.22.6",
+        "@babel/preset-env": "^7.22.6",
+        "@babel/register": "^7.22.5",
+        "chai": "^4.3.7",
+        "cspell": "^8.6.0",
+        "eslint": "^7.32.0",
+        "eslint-plugin-mocha": "^8.2.0",
+        "jsdom": "^16.7.0",
+        "mocha": "^10.2.0",
+        "npm-run-all": "^4.1.5",
+        "nyc": "^15.1.0",
+        "prettier": "^3.2.5",
+        "rimraf": "^3.0.2",
+        "sinon": "^9.2.4"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21"
+    }
 }

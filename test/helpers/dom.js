@@ -4,21 +4,23 @@ const { document } = new JSDOM('<!doctype html><html><body><div class="test">tes
 // Setup globals
 global.document = document;
 global.window = document.defaultView;
-global.requestAnimationFrame = callback => {
+global.requestAnimationFrame = (callback) => {
     setTimeout(callback, 0);
 };
 
 // Define matchMedia and allow us to enable and disable match matchMedia
-const matchMedia = window.matchMedia || (() => {
-    return { matches: true, addListener: () => {}, removeListener: () => {} };
-});
+const matchMedia =
+    window.matchMedia ||
+    (() => {
+        return { matches: true, addListener: () => {}, removeListener: () => {} };
+    });
 
 global.window.enableMatchMedia = () => {
     global.window.matchMedia = matchMedia;
 };
 
 global.window.disableMatchMedia = () => {
-    delete(global.window.matchMedia);
+    delete global.window.matchMedia;
 };
 
 global.window.enableMatchMedia();
@@ -26,7 +28,7 @@ global.window.enableMatchMedia();
 // Setup navigator
 global.navigator = {
     userAgent: 'node.js',
-    platform: 'node'
+    platform: 'node',
 };
 
 // Setup fucntion to resize the window
